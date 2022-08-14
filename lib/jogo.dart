@@ -28,7 +28,6 @@ class _JogoState extends State<Jogo> {
           ),
           /* Gesture Detector
            * Classe que irá detectar se há toque na tela.          
-          */
           GestureDetector(
             onTap: () {
               print("Um clique na imagem");
@@ -41,6 +40,8 @@ class _JogoState extends State<Jogo> {
             },
             child: Image.asset("images/padrao.png"),
           ),
+          */
+          Image.asset("images/padrao.png"),
           Padding(
             padding: EdgeInsets.only(top: 32, bottom: 16),
             child: Text("Escolha uma opção abaixo",
