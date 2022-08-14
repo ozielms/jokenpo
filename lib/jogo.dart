@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 class Jogo extends StatefulWidget {
@@ -8,6 +10,60 @@ class Jogo extends StatefulWidget {
 }
 
 class _JogoState extends State<Jogo> {
+  // Imagem que vai ser escolhida pelo App.
+  var _imagemApp = AssetImage("images/padrao.png");
+  var _mensagem = "Escolha uma opção abaixo";
+
+  // Detectar qual a opção o usuário selecionou
+  void _opcaoSelecionada(String escolhaUsuario) {
+    var opcoes = ["pedra", "papel", "tesoura"];
+    var numero = Random().nextInt(3);
+    var escolhaApp = opcoes[numero];
+
+    switch (escolhaApp) {
+      case "pedra":
+        setState(() {
+          this._imagemApp = AssetImage("images/pedra.png");
+        });
+        break;
+      case "papel":
+        setState(() {
+          this._imagemApp = AssetImage("images/papel.png");
+        });
+        break;
+      case "tesoura":
+        setState(() {
+          this._imagemApp = AssetImage("images/tesoura.png");
+        });
+        break;
+      default:
+    }
+
+    // Validação do ganhador
+    // Usuário ganhador
+    if ((escolhaUsuario == "pedra" && escolhaApp == "tesoura") ||
+        (escolhaUsuario == "tesoura" && escolhaApp == "papel") ||
+        (escolhaUsuario == "papel" && escolhaApp == "pedra")) {
+      setState(() {
+        this._mensagem = "Ganhou :)";
+      });
+    }
+    // App Ganhador
+    else if ((escolhaApp == "pedra" && escolhaUsuario == "tesoura") ||
+        (escolhaApp == "tesoura" && escolhaUsuario == "papel") ||
+        (escolhaApp == "papel" && escolhaUsuario == "pedra")) {
+      setState(() {
+        this._mensagem = "Perdeu :(";
+      });
+    }
+    // Empate
+    else {
+      setState(() {
+        this._mensagem = "Empate!!!";
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,12 +75,18 @@ class _JogoState extends State<Jogo> {
         children: <Widget>[
           Padding(
             padding: EdgeInsets.only(top: 32, bottom: 16),
-            child: Text("Escolha do App",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                )),
+            child: Text(
+              "Escolha do App",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Image(
+            image: this._imagemApp,
+            height: 140,
           ),
           /* Gesture Detector
            * Classe que irá detectar se há toque na tela.          
@@ -41,10 +103,9 @@ class _JogoState extends State<Jogo> {
             child: Image.asset("images/padrao.png"),
           ),
           */
-          Image.asset("images/padrao.png"),
           Padding(
             padding: EdgeInsets.only(top: 32, bottom: 16),
-            child: Text("Escolha uma opção abaixo",
+            child: Text(this._mensagem,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 20,
@@ -54,9 +115,27 @@ class _JogoState extends State<Jogo> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
+              /* // Esse trecho será substituido pelo GestureDetector
               Image.asset('images/pedra.png', height: 100),
               Image.asset('images/papel.png', height: 100),
               Image.asset('images/tesoura.png', height: 100),
+              */
+
+              GestureDetector(
+                /* () => : Usarei este tipo de função anônima para sair o erro,
+                 * pois minha função opcaoSelecionada é um void e não retorna nada.
+                */
+                onTap: () => _opcaoSelecionada("pedra"),
+                child: Image.asset('images/pedra.png', height: 100),
+              ),
+              GestureDetector(
+                onTap: () => _opcaoSelecionada("papel"),
+                child: Image.asset('images/papel.png', height: 100),
+              ),
+              GestureDetector(
+                onTap: () => _opcaoSelecionada("tesoura"),
+                child: Image.asset('images/tesoura.png', height: 100),
+              ),
             ],
           )
         ],
